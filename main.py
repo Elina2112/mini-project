@@ -102,6 +102,28 @@ class Example(QMainWindow):
         self.view.move(50, 60)
         self.view.resize(0, 0)
 
+        cur.execute('''SELECT * from Plan ''')
+        conn.commit()
+        results = cur.fetchall()
+
+        rows = self.model.rowCount()
+        if not rows:
+            return
+
+        self.jobs.clear()
+
+        cur.execute('''SELECT * from Plan ''')
+        conn.commit()
+        results = cur.fetchall()
+        for result in results:
+            item = QListWidgetItem(str(result[1] + '  ' + result[2] + '  ' + result[3] + '  ' + result[4]+'  '+result[5]))
+            item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+            if result[5] == "Выполнено":
+                item.setCheckState(QtCore.Qt.Checked)
+            elif result[5] == "Не выполнено":
+                item.setCheckState(QtCore.Qt.Unchecked)
+            self.jobs.addItem(item)
+
         self.button_1 = QPushButton(self)
         self.button_1.move(650, 620)
         self.button_1.resize(170, 30)
@@ -111,8 +133,9 @@ class Example(QMainWindow):
         self.button_2 = QPushButton(self)
         self.button_2.move(900, 620)
         self.button_2.resize(170, 30)
-        self.button_2.setText("Удалить дело")
-        #self.button_2.clicked.connect(self.run2)
+        #self.button_2.setText("Удалить дело")
+        self.button_2.setText("Сохранить изменения")
+        self.button_2.clicked.connect(self.run2)
 
     def run1(self):
         conn = sqlite3.connect("planirovshik.sqlite")
@@ -132,6 +155,67 @@ class Example(QMainWindow):
         msg.setIcon(QMessageBox.Information)
         msg.exec_()
         self.job.clear()
+
+    def run2(self):
+        conn = sqlite3.connect("planirovshik.sqlite")
+        cur = conn.cursor()
+
+
+
+        for i in range(self.jobs.count()):
+            item = self.jobs.item(i)
+            task = item.text()
+            j = str(self.job.text())
+            ts = str(self.time_start.text())
+            te = str(self.time_end.text())
+            d = self.data.selectedDate().toPyDate()
+
+            text=task.split("  ")
+            d = text[0]
+
+            ts = text[1]
+            te = text[2]
+            j=text[3]
+
+            if item.checkState() == QtCore.Qt.Checked:
+                #sj="Выполнено"
+                cur.execute('''UPDATE Plan SET Status_Job = 'Выполнено' WHERE Data = ? AND Time_start = ? AND Time_end=? AND Job=?''',
+                            (d,ts,te,j))
+            else:
+                #sj = "Не выполнено"
+                cur.execute(
+                    '''UPDATE Plan SET Status_Job = 'Не выполнено' WHERE Data = ? AND Time_start = ? AND Time_end=? AND Job=? ''',
+                    (d, ts, te, j))
+
+        conn.commit()
+
+        messageBox = QMessageBox()
+        messageBox.setText("Изменения сохранены")
+        messageBox.setStandardButtons(QMessageBox.Ok)
+        messageBox.exec()
+
+        self.w = Example()
+        self.w.show()
+        self.hide()
+
+    #def run2(self):
+        ##i=0
+        #for item in self.jobs.selectedItems():
+
+            ##i=int(self.jobs.row(item)+1)
+            ##print((i))
+            #self.jobs.takeItem(self.jobs.row(item))
+
+
+            #print("Успешно удалено")
+            #msg = QMessageBox()
+            #msg.setWindowTitle("Успешно")
+            #msg.setText("Успешно удалено")
+            #msg.setIcon(QMessageBox.Information)
+            #msg.exec_()
+
+        ##cur.execute('''DELETE from Plan where Id = ?''',(i,))
+        ##conn.commit()
 
 
 
