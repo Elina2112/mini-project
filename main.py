@@ -131,7 +131,7 @@ class Example(QMainWindow):
         msg.setText("Успешно добавлено")
         msg.setIcon(QMessageBox.Information)
         msg.exec_()
-        self.jobs.clear()
+        self.job.clear()
 
 
 
