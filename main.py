@@ -136,6 +136,7 @@ class Example(QMainWindow):
         #self.button_2.setText("Удалить дело")
         self.button_2.setText("Сохранить изменения")
         self.button_2.clicked.connect(self.run2)
+        self.button_2.show()
 
     def run1(self):
         conn = sqlite3.connect("planirovshik.sqlite")
@@ -155,6 +156,9 @@ class Example(QMainWindow):
         msg.setIcon(QMessageBox.Information)
         msg.exec_()
         self.job.clear()
+        self.w = Example()
+        self.w.show()
+        self.hide()
 
     def run2(self):
         conn = sqlite3.connect("planirovshik.sqlite")
