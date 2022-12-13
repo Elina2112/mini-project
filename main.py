@@ -120,8 +120,10 @@ class Example(QMainWindow):
             item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
             if result[5] == "Выполнено":
                 item.setCheckState(QtCore.Qt.Checked)
+                item.setBackground(QColor('#add9bc'))
             elif result[5] == "Не выполнено":
                 item.setCheckState(QtCore.Qt.Unchecked)
+                item.setBackground(QColor('#f56973'))
             self.jobs.addItem(item)
 
         self.button_1 = QPushButton(self)
@@ -136,7 +138,6 @@ class Example(QMainWindow):
         #self.button_2.setText("Удалить дело")
         self.button_2.setText("Сохранить изменения")
         self.button_2.clicked.connect(self.run2)
-        self.button_2.show()
 
     def run1(self):
         conn = sqlite3.connect("planirovshik.sqlite")
