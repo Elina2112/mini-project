@@ -139,6 +139,15 @@ class Example(QMainWindow):
         self.button_2.setText("Сохранить изменения")
         self.button_2.clicked.connect(self.run2)
 
+        self.button_3 = QPushButton(self)
+        self.button_3.move(750, 660)
+        self.button_3.resize(170, 30)
+        self.button_3.setText("Удалить дело")
+        self.button_3.clicked.connect(self.run1)
+
+
+
+
     def run1(self):
         conn = sqlite3.connect("planirovshik.sqlite")
         cur = conn.cursor()
