@@ -143,31 +143,8 @@ class Example(QMainWindow):
         self.button_3.move(750, 660)
         self.button_3.resize(170, 30)
         self.button_3.setText("Удалить дело")
-        self.button_3.clicked.connect(self.run3)
+        self.button_3.clicked.connect(self.run1)
 
-    def run3(self):
-        i = 0
-
-        for item in self.jobs.selectedItems():
-            sp = self.jobs.item(self.jobs.row(item)).text()
-            text = sp.split(" ")
-            d = text[0]
-            ts = text[1]
-            te = text[2]
-            j = text[3]
-
-            self.jobs.takeItem(self.jobs.row(item))
-
-            print("Успешно удалено")
-            msg = QMessageBox()
-            msg.setWindowTitle("Успешно")
-            msg.setText("Успешно удалено")
-            msg.setIcon(QMessageBox.Information)
-            msg.exec_()
-
-        cur.execute('''DELETE from Plan WHERE Data = ? AND Time_start = ? AND Time_end=? AND Job=?''',
-                (d, ts, te, j))
-        conn.commit()
 
 
 
