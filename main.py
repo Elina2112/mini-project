@@ -29,20 +29,20 @@ class Example(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.setGeometry(400, 100, 1200, 700)
+        self.setGeometry(410, 150, 1200, 750)
         self.setWindowTitle('Планировщик на день')
         self.spisokt = QLabel('Список дел', self)
-        self.spisokt.setStyleSheet("font:12pt;")
+        self.spisokt.setStyleSheet("font:18pt;")
         self.spisokt.adjustSize()
         self.spisokt.move(800, 30)
 
-        self.datat = QLabel('Выберите дату', self)
-        self.datat.setStyleSheet("font:12pt;")
+        self.datat = QLabel('Выберите дату:', self)
+        self.datat.setStyleSheet("font:18pt; ")
         self.datat.adjustSize()
-        self.datat.move(250, 30)
+        self.datat.move(220, 80)
 
-        self.pixmap = QPixmap("1.jpg").scaled(1200, 700)
         self.image = QLabel(self)
+        self.pixmap = QPixmap("1.jpg").scaled(1200, 700)
         self.image.resize(1200, 700)
         self.opacity_effect = QGraphicsOpacityEffect()
         self.opacity_effect.setOpacity(0.3)
@@ -52,43 +52,45 @@ class Example(QMainWindow):
 
 
         self.data = QCalendarWidget(self)
-        self.data.setObjectName("Дата")
-        self.data.setStyleSheet("font:10pt;")
+        self.data.setObjectName("Дата:")
+        self.data.setStyleSheet("font:11pt;")
         self.data.move(50, 150)
         self.data.resize(500, 300)
 
 
         self.jobs = QListWidget(self)
         self.jobs.setGeometry(QRect(600, 100, 530, 400))
-        self.jobs.setStyleSheet("font:12pt;")
+        self.jobs.setStyleSheet("font:14pt;")
         self.jobs.setObjectName("jobs")
 
         self.jobt = QLabel('Введите дело', self)
-        self.jobt.setStyleSheet("font:10pt;")
+        self.jobt.setStyleSheet("font:15pt;")
         self.jobt.adjustSize()
         self.jobt.move(800, 510)
         self.job = QLineEdit(self)
         self.job.setObjectName("Дело")
         self.job.move(600, 550)
-        self.job.resize(530, 40)
+        self.job.resize(530, 30)
 
-        self.time_startt = QLabel('Время начала', self)
+        self.time_startt = QLabel('Время начала:', self)
         self.time_startt.move(100, 480)
-        self.time_startt.setStyleSheet("font:10pt;")
+        self.time_startt.setStyleSheet("font:12pt;")
         self.time_startt.adjustSize()
         self.time_start = QDateTimeEdit(QTime.currentTime(), self)
         self.time_start.setObjectName("Время начала")
         self.time_start.move(100, 510)
-        self.time_start.resize(170, 30)
+        self.time_start.resize(170, 40)
+        self.time_start.setStyleSheet("font:12pt;")
 
-        self.time_endt = QLabel('Время конца', self)
+        self.time_endt = QLabel('Время конца:', self)
         self.time_endt.move(320, 480)
-        self.time_endt.setStyleSheet("font:10pt;")
+        self.time_endt.setStyleSheet("font:12pt;")
         self.time_endt.adjustSize()
         self.time_end = QDateTimeEdit(QTime.currentTime(), self)
         self.time_end.setObjectName("Время конца")
         self.time_end.move(320, 510)
-        self.time_end.resize(170, 30)
+        self.time_end.resize(170, 40)
+        self.time_end.setStyleSheet("font:12pt;")
 
 
         self.db = QSqlDatabase.addDatabase("QSQLITE")
@@ -135,7 +137,6 @@ class Example(QMainWindow):
         self.button_2 = QPushButton(self)
         self.button_2.move(900, 620)
         self.button_2.resize(170, 30)
-        #self.button_2.setText("Удалить дело")
         self.button_2.setText("Сохранить изменения")
         self.button_2.clicked.connect(self.run2)
 
@@ -143,8 +144,31 @@ class Example(QMainWindow):
         self.button_3.move(750, 660)
         self.button_3.resize(170, 30)
         self.button_3.setText("Удалить дело")
-        self.button_3.clicked.connect(self.run1)
+        self.button_3.clicked.connect(self.run3)
 
+    def run3(self):
+        i = 0
+
+        for item in self.jobs.selectedItems():
+            sp = self.jobs.item(self.jobs.row(item)).text()
+            text = sp.split(" ")
+            d = text[0]
+            ts = text[1]
+            te = text[2]
+            j = text[3]
+
+            self.jobs.takeItem(self.jobs.row(item))
+
+            print("Успешно удалено")
+            msg = QMessageBox()
+            msg.setWindowTitle("Успешно")
+            msg.setText("Успешно удалено")
+            msg.setIcon(QMessageBox.Information)
+            msg.exec_()
+
+        cur.execute('''DELETE from Plan WHERE Data = ? AND Time_start = ? AND Time_end=? AND Job=?''',
+                (d, ts, te, j))
+        conn.commit()
 
 
 
