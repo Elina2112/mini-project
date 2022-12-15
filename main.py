@@ -70,7 +70,8 @@ class Example(QMainWindow):
         self.job = QLineEdit(self)
         self.job.setObjectName("Дело")
         self.job.move(600, 550)
-        self.job.resize(530, 30)
+        self.job.resize(530, 40)
+        self.job.setStyleSheet("font:12pt;")
 
         self.time_startt = QLabel('Время начала:', self)
         self.time_startt.move(100, 480)
@@ -106,7 +107,7 @@ class Example(QMainWindow):
 
         cur.execute('''SELECT * from Plan ''')
         conn.commit()
-        results = cur.fetchall()
+
 
         rows = self.model.rowCount()
         if not rows:
@@ -151,7 +152,7 @@ class Example(QMainWindow):
 
         for item in self.jobs.selectedItems():
             sp = self.jobs.item(self.jobs.row(item)).text()
-            text = sp.split(" ")
+            text = sp.split("  ")
             d = text[0]
             ts = text[1]
             te = text[2]
@@ -166,30 +167,13 @@ class Example(QMainWindow):
             msg.setIcon(QMessageBox.Information)
             msg.exec_()
 
-        conn = sqlite3.connect("planirovshik.sqlite")
-        cur = conn.cursor()
         cur.execute('''DELETE from Plan WHERE Data = ? AND Time_start = ? AND Time_end=? AND Job=?''',
                 (d, ts, te, j))
         conn.commit()
 
-    # def run2(self):
-    ##i=0
-    # for item in self.jobs.selectedItems():
-
-    ##i=int(self.jobs.row(item)+1)
-    ##print((i))
-    # self.jobs.takeItem(self.jobs.row(item))
-
-    # print("Успешно удалено")
-    # msg = QMessageBox()
-    # msg.setWindowTitle("Успешно")
-    # msg.setText("Успешно удалено")
-    # msg.setIcon(QMessageBox.Information)
-    # msg.exec_()
-
-    ##cur.execute('''DELETE from Plan where Id = ?''',(i,))
-    ##conn.commit()
-
+        self.w = Example()
+        self.w.show()
+        self.hide()
 
     def run1(self):
         conn = sqlite3.connect("planirovshik.sqlite")
@@ -209,6 +193,7 @@ class Example(QMainWindow):
         msg.setIcon(QMessageBox.Information)
         msg.exec_()
         self.job.clear()
+
         self.w = Example()
         self.w.show()
         self.hide()
@@ -217,19 +202,12 @@ class Example(QMainWindow):
         conn = sqlite3.connect("planirovshik.sqlite")
         cur = conn.cursor()
 
-
-
         for i in range(self.jobs.count()):
             item = self.jobs.item(i)
             task = item.text()
-            j = str(self.job.text())
-            ts = str(self.time_start.text())
-            te = str(self.time_end.text())
-            d = self.data.selectedDate().toPyDate()
 
             text=task.split("  ")
             d = text[0]
-
             ts = text[1]
             te = text[2]
             j=text[3]
