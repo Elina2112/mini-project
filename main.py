@@ -166,10 +166,29 @@ class Example(QMainWindow):
             msg.setIcon(QMessageBox.Information)
             msg.exec_()
 
+        conn = sqlite3.connect("planirovshik.sqlite")
+        cur = conn.cursor()
         cur.execute('''DELETE from Plan WHERE Data = ? AND Time_start = ? AND Time_end=? AND Job=?''',
                 (d, ts, te, j))
         conn.commit()
 
+    # def run2(self):
+    ##i=0
+    # for item in self.jobs.selectedItems():
+
+    ##i=int(self.jobs.row(item)+1)
+    ##print((i))
+    # self.jobs.takeItem(self.jobs.row(item))
+
+    # print("Успешно удалено")
+    # msg = QMessageBox()
+    # msg.setWindowTitle("Успешно")
+    # msg.setText("Успешно удалено")
+    # msg.setIcon(QMessageBox.Information)
+    # msg.exec_()
+
+    ##cur.execute('''DELETE from Plan where Id = ?''',(i,))
+    ##conn.commit()
 
 
     def run1(self):
@@ -236,24 +255,7 @@ class Example(QMainWindow):
         self.w.show()
         self.hide()
 
-    #def run2(self):
-        ##i=0
-        #for item in self.jobs.selectedItems():
 
-            ##i=int(self.jobs.row(item)+1)
-            ##print((i))
-            #self.jobs.takeItem(self.jobs.row(item))
-
-
-            #print("Успешно удалено")
-            #msg = QMessageBox()
-            #msg.setWindowTitle("Успешно")
-            #msg.setText("Успешно удалено")
-            #msg.setIcon(QMessageBox.Information)
-            #msg.exec_()
-
-        ##cur.execute('''DELETE from Plan where Id = ?''',(i,))
-        ##conn.commit()
 
 
 
